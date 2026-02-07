@@ -1,5 +1,5 @@
 import express from 'express';
-
+import userRoutes from "./routes/userRoutes.ts"
 const app = express()
 const port = 3000;
 
@@ -19,9 +19,7 @@ app.get('/api/hello/:name', (req: Request, res: Response) => {
   const date = new Date();
   res.json({ message: `Bonjour ${name}`, timestamp: date.toISOString() });
 })
-
-
-
+app.use('/api/user', userRoutes);
 
 app.listen(port, () => {
   console.log('http://localhost:' + port);
