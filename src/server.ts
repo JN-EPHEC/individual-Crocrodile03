@@ -1,5 +1,18 @@
 import express from 'express';
 import userRoutes from "./routes/userRoutes.ts"
+import sequelize from "./config/database.ts";
+import User from "./models/User.ts";
+try {
+  await User.sync({ force: true });
+  console.log('The table for the User model was just (re)created!');
+  await sequelize.sync({ force: true });
+  console.log('All models were synchronized successfully.');
+  await sequelize.authenticate();
+  console.log('Connection has been established successfully.');
+} catch (error) {
+  console.error('Unable to connect to the database:', error);
+}
+
 const app = express()
 const port = 3000;
 
