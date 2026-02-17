@@ -13,13 +13,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: #212121;
+        }
+        @font-face {
+            font-family: Monocraft; /* set name */
+            src: url(fonts/Monocraft.woff); /* url of the font */
+        }
+
+        p {
+            font-family: Monocraft; /* use font */
         }
     </style>
 
 </head>
-<body class="grey darken-4 white-text">
+<body style="font-family: Monocraft" class="grey darken-4 white-text">
 <h1 class="h1 blue-text text-darken-2">Liste des étudiants</h1>
-<ul style="height: 50px" class="white-text"></ul>
+<ul class="collection white-text"></ul>
 <form>
     <div class="row">
         <div class="input-field col s4">
@@ -31,7 +40,7 @@
             <input type="text" id="prenom" name="prenom" class="white-text">
         </div>
         <div class="input-field col s4">
-            <input type="submit" value="Ajouter" class="btn waves-effect right white-text">
+            <input type="submit" value="Ajouter" class="btn right">
         </div>
     </div>
 </form>
