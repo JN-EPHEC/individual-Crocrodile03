@@ -13,7 +13,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       users.forEach((user) => {
         const li = document.createElement('li');
-        li.textContent = `${user.nom} ${user.prenom}`;
+        li.classList.add('collection-item');
+
+        li.innerHTML = `
+                <span>${user.nom} ${user.prenom}</span>
+                <button class="btn-small red right delete-btn" data-id="${user.id}">
+                    X
+                </button>
+            `;
+
         ul.appendChild(li);
       });
     } catch (error) {
@@ -50,4 +58,22 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Erreur réseau :', error);
     }
   });
+  ul.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('delete-btn')) {
+      const id = e.target.dataset.id;
+
+      try {
+        const response = await fetch(`/api/users/${id}`, {
+          method: 'DELETE',
+        });
+
+        if (response.ok) {
+          await loadUsers(); // rafraîchir la liste
+        }
+      } catch (error) {
+        console.error('Erreur suppression :', error);
+      }
+    }
+  });
+
 });
