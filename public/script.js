@@ -36,8 +36,22 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const nom = document.getElementById('nom').value;
-    const prenom = document.getElementById('prenom').value;
+    const nom = document.getElementById('nom').value.trim();
+    const prenom = document.getElementById('prenom').value.trim();
+
+    // Regex lettres uniquement (accents inclus)
+    const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\- ]+$/;
+
+    if (!nom || !prenom) {
+      M.toast({ html: 'Nom et prénom requis', classes: 'red' });
+      return;
+    }
+
+    if (!nameRegex.test(nom) || !nameRegex.test(prenom)) {
+      M.toast({ html: 'Seulement des lettres autorisées', classes: 'red' });
+      form.reset();
+      return;
+    }
 
     try {
       const response = await fetch('/api/users', {
