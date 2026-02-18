@@ -7,8 +7,25 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script src="./script.js"></script>
-    <title>Document</title>
+    <title>Index</title>
     <style>
+        .actions button {
+            transition: transform 0.1s ease;
+        }
+
+        .actions button:hover {
+            transform: scale(1.1);
+        }
+
+        .user-row {
+            display: flex;
+
+        }
+        .actions {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+        }
         .collection .collection-item {
             display: flex;
             justify-content: space-between;
@@ -21,7 +38,7 @@
         }
 
         p {
-            font-family: Monocraft; /* use font */
+            font-family: Monocraft,serif; /* use font */
         }
     </style>
 

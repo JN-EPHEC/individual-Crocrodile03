@@ -16,11 +16,17 @@ document.addEventListener('DOMContentLoaded', () => {
         li.classList.add('collection-item');
 
         li.innerHTML = `
+            <div class="user-row">
                 <span>${user.nom} ${user.prenom}</span>
-                <button class="btn-small red right delete-btn" data-id="${user.id}">
-                    X
-                </button>
-            `;
+            </div>
+            <div class="actions">
+              <button class="btn-small blue edit-btn"
+              data-id="${user.id}"
+              data-nom="${user.nom}"
+              data-prenom="${user.prenom}">M</button>
+              <button class="btn-small red delete-btn" data-id="${user.id}">X</button>
+            </div>            
+        `;
 
         ul.appendChild(li);
       });
@@ -86,6 +92,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       } catch (error) {
         console.error('Erreur suppression :', error);
+      }
+    }
+    if (e.target.classList.contains('edit-btn')) {
+      const id = e.target.dataset.id;
+      const oldNom = e.target.dataset.nom;
+      const oldPrenom = e.target.dataset.prenom;
+
+      const newNom = prompt('Nouveau nom :', oldNom)?.trim();
+      const newPrenom = prompt('Nouveau prénom :', oldPrenom)?.trim();
+
+      if (!newNom || !newPrenom) return;
+
+      const nameRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\- ]+$/;
+
+      if (!nameRegex.test(newNom) || !nameRegex.test(newPrenom)) {
+        M.toast({ html: 'Seulement des lettres autorisées', classes: 'red' });
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/users/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            nom: newNom,
+            prenom: newPrenom,
+          }),
+        });
+
+        if (response.ok) {
+          await loadUsers();
+          M.toast({ html: 'Utilisateur modifié', classes: 'green' });
+        }
+      } catch (error) {
+        console.error('Erreur modification :', error);
       }
     }
   });
