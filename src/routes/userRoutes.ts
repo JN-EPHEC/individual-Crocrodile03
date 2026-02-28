@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { validateUser } from '../middleware/validateUser.ts';
+import { validateUser } from '../middlewares/validateUser.ts';
 import * as userController from '../controllers/userController.ts';
 const router: Router = express.Router();
 

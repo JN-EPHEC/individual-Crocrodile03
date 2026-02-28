@@ -3,6 +3,8 @@ import userRoutes from "./routes/userRoutes.ts";
 
 import sequelize from "./config/database.ts";
 import User from "./models/User.ts";
+import { requestLogger } from './middlewares/logger.ts';
+
 try {
   await User.sync({});
   console.log('The table for the User model was just (re)created!');
@@ -28,6 +30,10 @@ app.use('/api/users', userRoutes);
 
 // Static routes public
 app.use(express.static('public'))
+
+// Middleware logger
+app.use(requestLogger);
+
 /*
 const etudiants = [
   {id: 1, nom: "Dupont", prenom: "Jean"},
