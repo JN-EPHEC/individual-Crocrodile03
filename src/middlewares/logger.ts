@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 export const requestLogger = (
   req: Request,
   _res: Response,
-  next: NextFunction,
+  next: NextFunction
 ):void => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
-  next(); // Indispensable pour passer à la suite !
+  next();
 };

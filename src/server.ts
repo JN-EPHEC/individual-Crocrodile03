@@ -4,6 +4,9 @@ import userRoutes from "./routes/userRoutes.ts";
 import sequelize from "./config/database.ts";
 import User from "./models/User.ts";
 import { requestLogger } from './middlewares/logger.ts';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
+import { errorHandler } from './middlewares/errorHandler.ts';
 
 try {
   await User.sync({});
@@ -19,11 +22,17 @@ try {
 const app: Application = express()
 const port = 3000;
 
+// Middleware logger
+app.use(requestLogger);
+
 // Enable URL-encoded from data parsing
 app.use(express.urlencoded({extended: true}));
 
 // Middleware to parse JSON
 app.use(express.json());
+
+// Swagger api
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Mount routes
 app.use('/api/users', userRoutes);
@@ -31,28 +40,8 @@ app.use('/api/users', userRoutes);
 // Static routes public
 app.use(express.static('public'))
 
-// Middleware logger
-app.use(requestLogger);
-
-/*
-const etudiants = [
-  {id: 1, nom: "Dupont", prenom: "Jean"},
-  {id: 2, nom: "Martin", prenom: "Sophie"},
-  {id: 3, nom: "Doe", prenom: "John"}
-];
-
-
-app.get('/', (req: Request, res: Response): void  => {
-  res.json(etudiants);
-});
-
-app.get('/api/hello/:name', (req: Request, res: Response) => {
-  const name: String = req.params.name;
-  const date = new Date();
-  res.json({ message: `Bonjour ${name}`, timestamp: date.toISOString() });
-})
-app.use('/api/user', userRoutes);
-*/
+// Middleware qui gère les erreurs
+app.use(errorHandler);
 
 // Start server
 app.listen(port, () => {

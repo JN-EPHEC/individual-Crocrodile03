@@ -1,31 +1,35 @@
-import type { Request, Response } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import User from '../models/User';
 
 
 // GET: Fetch all users
-export const getAllUsers = async (_req: Request, res: Response): Promise<void> => {
+export const getAllUsers = async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const users: User[] = await User.findAll();
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ error: (error as any).message });
+    next(error);
   }
 };
 
 // ADD: add a User
-export const addUser = async (req: Request, res: Response): Promise<void> => {
+export const addUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const { nom, prenom } = req.body;
     const newUser: User = await User.create({ nom, prenom });
 
     res.status(201).json(newUser);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // UPDATE: Modify a User
-export const modifyUser =  async (req: Request, res: Response) => {
+export const modifyUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
 
@@ -42,12 +46,16 @@ export const modifyUser =  async (req: Request, res: Response) => {
 
     res.status(200).json(user);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
 
 // DELETE: Delete a User
-export const deleteUser = async (req: Request, res: Response): Promise<void> => {
+export const deleteUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> => {
   try {
     const id = req.params.id;
 
@@ -55,15 +63,14 @@ export const deleteUser = async (req: Request, res: Response): Promise<void> => 
     const user: User = await User.findByPk(id);
 
     if (!user) {
-      res.status(404).json({ error: "Utilisateur non trouvé" });
+      res.status(404).json({ error: 'Utilisateur non trouvé' });
       return;
     }
 
     await user.destroy();
 
-    res.json({ message: "Utilisateur supprimé" });
-
+    res.json({ message: 'Utilisateur supprimé' });
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    next(error);
   }
 };
